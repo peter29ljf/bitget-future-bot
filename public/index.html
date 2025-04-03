@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bitget 合约网络自动交易系统</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Bitget 合约网络自动交易系统</h1>
+      <div class="status-bar">
+        <div class="status-item" id="api-status">API状态: <span class="status-loading">检查中...</span></div>
+        <div class="status-item" id="mode-status">模式: <span class="status-loading">检查中...</span></div>
+        <div class="status-item" id="active-trades">活跃交易: <span class="status-loading">检查中...</span></div>
+      </div>
+    </header>
+    
+    <div class="main">
+      <div class="left-column">
+        <section class="settings-form">
+          <h2>全局设置</h2>
+          <form id="settings-form">
+            <div class="form-group">
+              <label for="amount">买入金额(USDT):</label>
+              <input type="number" id="amount" name="amount" value="100">
+            </div>
+            
+            <div class="form-group">
+              <label for="take-profit">止盈百分比(%):</label>
+              <input type="number" id="take-profit" name="takeProfitPercentage" placeholder="默认：3" step="0.1">
+            </div>
+            
+            <div class="form-group">
+              <label for="stop-loss">止损百分比(%):</label>
+              <input type="number" id="stop-loss" name="stopLossPercentage" placeholder="默认：2" step="0.1">
+            </div>
+            
+            <div class="form-group trade-mode">
+              <label>交易模式:</label>
+              <div class="trade-mode-options">
+                <label>
+                  <input type="radio" name="trade-mode" value="both" checked>
+                  多空都做
+                </label>
+                <label>
+                  <input type="radio" name="trade-mode" value="long-only">
+                  只做多
+                </label>
+                <label>
+                  <input type="radio" name="trade-mode" value="short-only">
+                  只做空
+                </label>
+              </div>
+            </div>
+            
+            <div class="form-buttons">
+              <button type="button" id="save-settings" class="btn btn-primary">保存设置</button>
+            </div>
+          </form>
+        </section>
+          
+        <section class="trade-actions">
+          <h2>交易操作</h2>
+          <div class="trade-action-form">
+            <div class="form-group">
+              <label for="symbol">交易对:</label>
+              <input type="text" id="symbol" name="symbol" placeholder="例如：BTCUSDT" required>
+            </div>
+            
+            <div class="action-buttons">
+              <button type="button" id="open-long" class="btn btn-success">开多</button>
+              <button type="button" id="open-short" class="btn btn-danger">开空</button>
+            </div>
+          </div>
+        </section>
+      </div>
+      
+      <section class="active-trades">
+        <h2>活跃交易</h2>
+        <div class="trades-container" id="trades-container">
+          <p class="no-trades">没有活跃交易</p>
+        </div>
+      </section>
+    </div>
+    
+    <div class="notification" id="notification">
+      <span id="notification-message"></span>
+      <button id="close-notification">×</button>
+    </div>
+  </div>
+  
+  <script src="script.js"></script>
+</body>
+</html> 
