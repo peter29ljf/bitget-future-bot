@@ -1,0 +1,14 @@
+{
+    "api": {
+      "apiKey": "您的Bitget API Key",
+      "secretKey": "您的Bitget Secret Key",
+      "passphrase": "您的Bitget API密码",
+      "baseUrl": "https://api.bitget.com",
+      "testMode": true
+    },
+    "trading": {
+      "defaultAmount": 10,
+      "defaultTakeProfitPercentage": 3,
+      "defaultStopLossPercentage": 3
+    }
+  }
