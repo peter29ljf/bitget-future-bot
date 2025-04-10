@@ -8,6 +8,7 @@
     },
     "trading": {
       "defaultAmount": 10,
+      "defaultLeverage": 20,
       "defaultTakeProfitPercentage": 3,
       "defaultStopLossPercentage": 3
     }

@@ -35,8 +35,8 @@
 
 1. 克隆本仓库到本地
 ```bash
-git clone https://github.com/peter29ljf/bitget-trading-bot.git
-cd bitget-trading-bot
+git clone https://github.com/peter29ljf/bitget-future-bot.git
+cd bitget-future-bot
 ```
 
 2. 安装依赖
@@ -64,6 +64,7 @@ cp docs/config.example.json config.json
   },
   "trading": {
     "defaultAmount": 10,
+    "defaultLeverage": 20,
     "defaultTakeProfitPercentage": 3,
     "defaultStopLossPercentage": 3
   }
@@ -74,6 +75,7 @@ cp docs/config.example.json config.json
 * 将`testMode`设置为`true`表示使用模拟交易模式（推荐先测试）
 * 设置为`false`将使用实盘交易，请谨慎操作
 * `defaultAmount`: 默认交易金额（USDT）
+* `defaultLeverage`: 默认杠杆倍数，实际交易金额 = defaultAmount × defaultLeverage
 * `defaultTakeProfitPercentage`: 默认止盈百分比
 * `defaultStopLossPercentage`: 默认止损百分比
 
@@ -83,7 +85,7 @@ node server.js
 ```
 
 5. 访问控制面板
-打开浏览器，访问 `http://localhost:3000`
+打开浏览器，访问 `http://localhost:2025`
 
 ## 使用说明
 
@@ -91,7 +93,8 @@ node server.js
 
 在控制面板的"全局设置"区域，您可以配置以下交易参数：
 
-- **买入金额(USDT)**: 每次交易的USDT金额
+- **买入金额(USDT)**: 每次交易的基础USDT金额
+- **杠杆倍数**: 交易杠杆倍数，实际交易金额 = 买入金额 × 杠杆倍数
 - **止盈百分比(%)**: 价格上涨或下跌该百分比时触发止盈
 - **止损百分比(%)**: 价格下跌或上涨该百分比时触发止损
 - **交易模式**: 可选择"多空都做"、"只做多"或"只做空"
@@ -186,7 +189,7 @@ A: 输入交易对时，格式为"BTCUSDT"（不区分大小写），系统会�
 
 ## 许可证
 
-本项目采用MIT许可证。详情请参阅[LICENSE](LICENSE)文件。
+本项目采用MIT许可证。详情请参阅[LICENSE](https://github.com/peter29ljf/bitget-future-bot/blob/main/LICENSE)文件。
 
 ## 免责声明
 

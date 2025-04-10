@@ -10,7 +10,7 @@ const monitor = require('./src/controllers/monitor');
 const bitgetClient = require('./src/api/client');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 2025;
 
 // 启动前设置持仓模式
 async function initializeServer() {

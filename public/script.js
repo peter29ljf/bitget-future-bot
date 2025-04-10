@@ -9,6 +9,7 @@ const closeNotificationBtn = document.getElementById('close-notification');
 const settingsForm = document.getElementById('settings-form');
 const symbolInput = document.getElementById('symbol');
 const amountInput = document.getElementById('amount');
+const leverageInput = document.getElementById('leverage');
 const takeProfitInput = document.getElementById('take-profit');
 const stopLossInput = document.getElementById('stop-loss');
 const saveSettingsBtn = document.getElementById('save-settings');
@@ -18,6 +19,7 @@ const openShortBtn = document.getElementById('open-short');
 // 交易设置
 let tradeSettings = {
   amount: 100,
+  leverage: 20,
   takeProfitPercentage: 3,
   stopLossPercentage: 2,
   tradeMode: 'both'
@@ -61,6 +63,7 @@ function loadSettings() {
     
     // 填充表单
     amountInput.value = tradeSettings.amount;
+    leverageInput.value = tradeSettings.leverage;
     takeProfitInput.value = tradeSettings.takeProfitPercentage;
     stopLossInput.value = tradeSettings.stopLossPercentage;
     
@@ -79,6 +82,7 @@ function loadSettings() {
 function saveSettings() {
   // 获取表单值
   const amount = amountInput.value || 100;
+  const leverage = leverageInput.value || 20;
   const takeProfitPercentage = takeProfitInput.value || 3;
   const stopLossPercentage = stopLossInput.value || 2;
   
@@ -95,6 +99,7 @@ function saveSettings() {
   // 更新设置
   tradeSettings = {
     amount: parseFloat(amount),
+    leverage: parseInt(leverage),
     takeProfitPercentage: parseFloat(takeProfitPercentage),
     stopLossPercentage: parseFloat(stopLossPercentage),
     tradeMode
@@ -215,55 +220,37 @@ async function placeTrade(action) {
     return;
   }
   
-  // 使用当前设置
-  const { amount, takeProfitPercentage, stopLossPercentage, tradeMode } = tradeSettings;
-  
-  // 检查交易模式与操作是否匹配
-  if ((tradeMode === 'long-only' && action === 'SELL') || 
-      (tradeMode === 'short-only' && action === 'BUY')) {
-    showNotification(`当前交易模式不允许${action === 'BUY' ? '开多' : '开空'}`, 'error');
+  // 检查交易模式
+  if ((action === 'BUY' && tradeSettings.tradeMode === 'short-only') ||
+      (action === 'SELL' && tradeSettings.tradeMode === 'long-only')) {
+    showNotification('当前交易模式不允许此操作', 'error');
     return;
   }
   
   try {
-    // 显示处理中
-    showNotification('处理订单中...', 'loading');
-    
-    // 准备请求数据
-    const requestData = {
-      COINNAME: symbol,
-      SIDE: action,
-      amount: parseFloat(amount),
-      takeProfitPercentage: parseFloat(takeProfitPercentage),
-      stopLossPercentage: parseFloat(stopLossPercentage)
-    };
-    
-    // 发送请求
-    const response = await fetch('/api/signal', {
+    const response = await fetch(`/api/${action === 'BUY' ? 'open-long' : 'open-short'}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(requestData)
+      body: JSON.stringify({
+        symbol,
+        amount: tradeSettings.amount * tradeSettings.leverage,
+        takeProfitPercentage: tradeSettings.takeProfitPercentage,
+        stopLossPercentage: tradeSettings.stopLossPercentage
+      })
     });
     
-    if (response.ok) {
-      const result = await response.json();
-      
-      if (result.success) {
-        showNotification(result.message, 'success');
-        // 刷新活跃交易列表
-        loadActiveTrades();
-      } else {
-        showNotification(result.message || '交易失败', 'error');
-      }
+    const data = await response.json();
+    if (data.success) {
+      showNotification(`${action === 'BUY' ? '开多' : '开空'}订单已提交`, 'success');
+      loadActiveTrades();
     } else {
-      const errorData = await response.json();
-      showNotification(errorData.message || '交易请求失败', 'error');
+      showNotification(data.message || '下单失败', 'error');
     }
   } catch (error) {
     console.error('下单时出错:', error);
-    showNotification('下单请求出错', 'error');
+    showNotification('下单时出错', 'error');
   }
 }
 
