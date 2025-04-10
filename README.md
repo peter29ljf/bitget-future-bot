@@ -70,12 +70,7 @@ cp docs/config.example.json config.json
 }
 ```
 
-注意：
-* 将`testMode`设置为`true`表示使用模拟交易模式（推荐先测试）
-* 设置为`false`将使用实盘交易，请谨慎操作
-* `defaultAmount`: 默认交易金额（USDT）
-* `defaultTakeProfitPercentage`: 默认止盈百分比
-* `defaultStopLossPercentage`: 默认止损百分比
+
 
 4. 启动服务器
 ```bash
@@ -83,7 +78,7 @@ node server.js
 ```
 
 5. 访问控制面板
-打开浏览器，访问 `http://localhost:3000`
+打开浏览器，访问 `http://localhost:3000`设置参数
 
 ## 使用说明
 
