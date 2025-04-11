@@ -1,0 +1,16 @@
+{
+    "api": {
+      "apiKey": "YOUR_BITGET_API_KEY_HERE",
+      "apiSecret": "YOUR_BITGET_SECRET_KEY_HERE",
+      "apiPassphrase": "YOUR_BITGET_API_PASSPHRASE_HERE",
+      "baseUrl": "https://api.bitget.com",
+      "testMode": true
+    },
+    "trading": {
+      "defaultAmount": 40,
+      "defaultLeverage": 25,
+      "defaultTakeProfitPercentage": 5,
+      "defaultStopLossPercentage": 5,
+      "defaultTradeMode": "both"
+    }
+  }
