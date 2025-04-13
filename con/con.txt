@@ -1,0 +1,8 @@
+# 平多单（发送卖出信号）
+curl -X POST -H "Content-Type: application/json" -d '{"COINNAME": "BTCUSDT", "SIDE": "SELL"}' http://localhost:3000/api/signal
+
+# 平空单（发送买入信号）
+curl -X POST -H "Content-Type: application/json" -d '{"COINNAME": "BTCUSDT", "SIDE": "BUY"}' http://localhost:3000/api/signal
+curl -X POST -H "Content-Type: application/json" -d '{"COINNAME": "BTCUSDT_UMCBL", "SIDE": "SELL"}' http://localhost:3000/api/signal
+
+curl -X POST -H "Content-Type: application/json" -d '{"COINNAME": "BTCUSDT_UMCBL", "SIDE": "BUY"}' http://localhost:3000/api/signal

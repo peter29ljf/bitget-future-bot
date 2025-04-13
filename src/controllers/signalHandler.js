@@ -52,18 +52,18 @@ async function checkTradeAllowed(symbol, side) {
         // 1. 如果没有仓位，允许任何方向的交易
         if (!existingTrade) {
             console.log('没有现有仓位，允许开仓');
-            return true;
+            return { allowed: true, shouldOpen: true };
         }
 
         // 2. 有多单的情况
         if (existingTrade.type === 'long') {
             if (side === 'BUY') {
                 console.log('已有相同币种的多单，不允许重复开多');
-                return false;
+                return { allowed: false, shouldOpen: false };
             } else if (side === 'SELL') {
-                console.log('已有相同币种的多单，需要先平多');
+                console.log('已有相同币种的多单，执行平多');
                 await closePosition.closeLongPosition(symbol, existingTrade.size);
-                return true;
+                return { allowed: true, shouldOpen: false };
             }
         }
 
@@ -71,18 +71,18 @@ async function checkTradeAllowed(symbol, side) {
         if (existingTrade.type === 'short') {
             if (side === 'SELL') {
                 console.log('已有相同币种的空单，不允许重复开空');
-                return false;
+                return { allowed: false, shouldOpen: false };
             } else if (side === 'BUY') {
-                console.log('已有相同币种的空单，需要先平空');
+                console.log('已有相同币种的空单，执行平空');
                 await closePosition.closeShortPosition(symbol, existingTrade.size);
-                return true;
+                return { allowed: true, shouldOpen: false };
             }
         }
 
-        return true;
+        return { allowed: true, shouldOpen: true };
     } catch (error) {
         console.error('检查交易许可失败:', error);
-        return false;
+        return { allowed: false, shouldOpen: false };
     }
 }
 
@@ -110,12 +110,20 @@ async function handleSignal(req, res) {
         console.log('止损比例:', settings.stopLossPercentage, '%');
         console.log('------------------------\n');
 
-        const isAllowed = await checkTradeAllowed(COINNAME, SIDE);
+        const tradeCheck = await checkTradeAllowed(COINNAME, SIDE);
         
-        if (!isAllowed) {
+        if (!tradeCheck.allowed) {
             return res.status(400).json({ 
                 success: false, 
-                message: '不允许开仓，可能是因为已有相同币种的仓位' 
+                message: '不允许交易，可能是因为已有相同币种的仓位' 
+            });
+        }
+
+        // 如果不需要开新仓，直接返回成功
+        if (!tradeCheck.shouldOpen) {
+            return res.json({
+                success: true,
+                message: '已执行平仓操作'
             });
         }
 
@@ -129,7 +137,7 @@ async function handleSignal(req, res) {
             }
         };
 
-        console.log('准备执行交易，请求参数:', JSON.stringify(tradeReq.body, null, 2));
+        console.log('准备执行开仓，请求参数:', JSON.stringify(tradeReq.body, null, 2));
 
         if (SIDE === 'BUY') {
             return longPosition.openLong(tradeReq, res);

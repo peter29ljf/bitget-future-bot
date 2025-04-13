@@ -1,5 +1,5 @@
 {
-  "amount": 500,
+  "amount": 200,
   "leverage": 1,
   "takeProfitPercentage": 10,
   "stopLossPercentage": 10,
