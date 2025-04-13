@@ -1,0 +1,7 @@
+{
+  "amount": 500,
+  "leverage": 1,
+  "takeProfitPercentage": 10,
+  "stopLossPercentage": 10,
+  "tradeMode": "dual_side"
+}
